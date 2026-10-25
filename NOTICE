@@ -1,0 +1,11 @@
+This application uses S1-mini by Superwhisper for transcript cleanup.
+
+S1-mini by Superwhisper is licensed under Apache License 2.0 plus an
+additional naming term: any use must identify the model as "S1-mini"
+by "Superwhisper", with that exact capitalization.
+
+See https://huggingface.co/superwhisper/s1-mini
+and the LICENSE file shipped with the model weights.
+
+Speech recognition is performed locally with OpenAI Whisper
+(via mlx-whisper or faster-whisper).

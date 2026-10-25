@@ -1,0 +1,62 @@
+name: SimpleWisper
+options:
+  bundleIdPrefix: com.simplewisper
+  deploymentTarget:
+    macOS: "14.0"
+packages:
+  WhisperKit:
+    url: https://github.com/argmaxinc/WhisperKit
+    from: 1.1.1
+  MLXLM:
+    url: https://github.com/ml-explore/mlx-swift-lm
+    from: 3.32.3
+  HuggingFace:
+    url: https://github.com/huggingface/swift-huggingface
+    from: 0.9.0
+  Transformers:
+    url: https://github.com/huggingface/swift-transformers
+    from: 1.3.0
+targets:
+  SimpleWisper:
+    type: application
+    platform: macOS
+    sources: [SimpleWisper]
+    dependencies:
+      - package: WhisperKit
+        product: WhisperKit
+      - package: MLXLM
+        product: MLXLLM
+      - package: MLXLM
+        product: MLXLMCommon
+      - package: MLXLM
+        product: MLXHuggingFace
+      - package: HuggingFace
+        product: HuggingFace
+      - package: Transformers
+        product: Tokenizers
+    info:
+      path: SimpleWisper/Info.plist
+      properties:
+        CFBundleDisplayName: Simple Wisper
+        CFBundleShortVersionString: "1.0.0"
+        CFBundleVersion: "1"
+        LSUIElement: true
+        LSMinimumSystemVersion: "14.0"
+        NSMicrophoneUsageDescription: Simple Wisper records your voice while you hold the hotkey and transcribes it on this Mac.
+    entitlements:
+      path: SimpleWisper/SimpleWisper.entitlements
+      properties:
+        com.apple.security.device.audio-input: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.simplewisper.app
+        PRODUCT_NAME: Simple Wisper
+        MARKETING_VERSION: "1.0.0"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ENABLE_HARDENED_RUNTIME: YES
+        ARCHS: arm64
+        SWIFT_VERSION: "5.0"
+        CODE_SIGN_STYLE: Manual
+        CODE_SIGN_IDENTITY: "Simple Wisper Local"
+        DEVELOPMENT_TEAM: ""
+        OTHER_CODE_SIGN_FLAGS: "--timestamp=none"
