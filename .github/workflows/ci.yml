@@ -7,12 +7,14 @@ on:
 
 jobs:
   build:
-    runs-on: macos-15
+    runs-on: macos-26
     steps:
       - uses: actions/checkout@v4
       - name: Install tooling
         run: |
           brew install xcodegen
+          sudo xcode-select -s "$(ls -d /Applications/Xcode_26*.app 2>/dev/null | sort -V | tail -1)" || true
+          xcodebuild -version
           xcodebuild -downloadComponent MetalToolchain
       - name: Build (ad-hoc signed)
         run: make build SIGN_IDENTITY=-
