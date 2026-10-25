@@ -1,0 +1,36 @@
+name: Release
+
+# Push a tag like v1.2.0 to publish a GitHub Release with a downloadable DMG.
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install tooling
+        run: |
+          brew install xcodegen
+          xcodebuild -downloadComponent MetalToolchain
+      - name: Build DMG
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          make dmg SIGN_IDENTITY=- VERSION="$VERSION" BUILD_NUMBER="$GITHUB_RUN_NUMBER"
+          mv build/SimpleWisper.dmg "build/SimpleWisper-${VERSION}.dmg"
+          shasum -a 256 "build/SimpleWisper-${VERSION}.dmg" > "build/SimpleWisper-${VERSION}.dmg.sha256"
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          gh release create "$GITHUB_REF_NAME" \
+            "build/SimpleWisper-${VERSION}.dmg" \
+            "build/SimpleWisper-${VERSION}.dmg.sha256" \
+            --title "Simple Wisper ${VERSION}" \
+            --generate-notes \
+            $([[ "$VERSION" == *-* ]] && echo --prerelease)

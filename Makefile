@@ -1,6 +1,16 @@
 APP := build/Build/Products/Release/Simple Wisper.app
+
+# Signing identity: the local self-signed cert by default; CI passes SIGN_IDENTITY=- (ad-hoc).
+SIGN_IDENTITY ?= Simple Wisper Local
+# Release versioning: overrides MARKETING_VERSION / CURRENT_PROJECT_VERSION from project.yml.
+VERSION ?=
+BUILD_NUMBER ?=
+
 XCB := xcodebuild -project SimpleWisper.xcodeproj -scheme SimpleWisper -configuration Release \
-	-derivedDataPath build -clonedSourcePackagesDirPath build/spm -skipMacroValidation
+	-derivedDataPath build -clonedSourcePackagesDirPath build/spm -skipMacroValidation \
+	CODE_SIGN_IDENTITY="$(SIGN_IDENTITY)" \
+	$(if $(VERSION),MARKETING_VERSION=$(VERSION)) \
+	$(if $(BUILD_NUMBER),CURRENT_PROJECT_VERSION=$(BUILD_NUMBER))
 
 .PHONY: project icons build install cert dmg clean
 
